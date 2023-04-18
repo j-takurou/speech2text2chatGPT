@@ -8,11 +8,12 @@ from six.moves import queue
 import openai
 
 openai.api_key = os.getenv("OPENAI_APIKEY")
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "config.json"
 
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
@@ -79,6 +80,7 @@ class MicrophoneStream(object):
                 except queue.Empty:
                     break
             yield b"".join(data)
+
 
 def listen_print_loop(responses):
     """Iterates through server responses and prints them.
@@ -177,6 +179,7 @@ def main():
 
         # Now, put the transcription responses to use.
         listen_print_loop(responses)
+
 
 if __name__ == "__main__":
     main()
