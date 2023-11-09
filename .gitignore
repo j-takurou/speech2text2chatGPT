@@ -1,3 +1,5 @@
 config.json
 credentials
 __pycache__/
+#以下、一旦管理不要
+open_interpreter/
