@@ -24,17 +24,11 @@ def read_root():
 @app.get("/get_subtitles_summary/{video_id}")
 def get_subtitles_summary(video_id: str):
     # YouTube APIを使用して字幕情報を取得
-    subtitles_data = get_subtitles(video_id)
-    print(subtitles_data)
-    return subtitles_data
+    documents = get_subtitles(video_id)
+    return get_summarize(documents)
 
 
 def get_subtitles(video_id):
-    # XXX: 関数分割してLoaderとsummarizerのデバッグしやすいように
-    # XXX: https://python.langchain.com/docs/integrations/document_loaders/youtube_transcript
-    # langchainで実装可能...!
-    # from: https://nikkie-ftnext.hatenablog.com/entry/how-easy-youtube-transcript-api-and-langchain-youtubeloader
-
     try:
         loader = (
             YoutubeLoader
@@ -44,6 +38,18 @@ def get_subtitles(video_id):
             )
         )
         documents = loader.load()
+        return documents
+    except Exception as e:
+        raise e
+
+
+def get_summarize(documents):
+    # XXX: 関数分割してLoaderとsummarizerのデバッグしやすいように
+    # XXX: https://python.langchain.com/docs/integrations/document_loaders/youtube_transcript
+    # langchainで実装可能...!
+    # from: https://nikkie-ftnext.hatenablog.com/entry/how-easy-youtube-transcript-api-and-langchain-youtubeloader
+
+    try:
         # Prepare LLM Chain
         text_splitter = TokenTextSplitter(chunk_size=3000, chunk_overlap=1000)
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=1.0)
